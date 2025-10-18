@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Chart.Name }}-deployment"
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      containers:
+      - name: "{{ .Chart.Name }}-container"
+        image: {{ .Values.image.repository }}
+        env:
+        - name: MINIO_ROOT_USER
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.secretName }}
+              key: {{ .Values.minioRootUserKey }}
+        - name: MINIO_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: {{ .Values.secretName }}
+              key: {{ .Values.minioRootPasswordKey }}
+        - name: MINIO_ADDRESS
+          value: ':9090'
+        - name: MINIO_CONSOLE_ADDRESS
+          value: ':9091'
+        volumeMounts:
+          - mountPath: /data
+            name: data
+        args:
+        - server
+        - /data
+      volumes:
+        - name: data

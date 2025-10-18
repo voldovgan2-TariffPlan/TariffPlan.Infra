@@ -1,0 +1,53 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: settings-api-deployment
+  namespace: fitness-app
+  labels:
+    app: settings-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: settings-api
+  template:
+    metadata:
+      labels:
+        app: settings-api
+    spec:      
+      containers:
+      - name: settings-api
+        image: fitnessappacc/fitness-app-settings-api:latest
+        env:
+        - name: OpenIdConnect__Issuer
+          valueFrom: 
+            configMapKeyRef:
+              name: fitness-app-configmap
+              key: OpenIdConnect_Issuer
+        - name: VaultClient__Address
+          valueFrom: 
+            configMapKeyRef:
+              name: fitness-app-configmap
+              key: VaultClient_Address 
+        - name: VaultClient__Token
+          valueFrom: 
+            secretKeyRef:
+              name: fitness-app-secret
+              key: vault-dev-root-token-id  
+        - name: ASPNETCORE_HTTP_PORTS
+          value: '8000'
+      imagePullSecrets:
+      - name: fitness-docker-hub
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: settings-api-service
+  namespace: fitness-app
+spec:
+  selector:
+    app: settings-api
+  ports:
+    - name: backend
+      protocol: TCP
+      port: 8000

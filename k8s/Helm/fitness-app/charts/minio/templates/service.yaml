@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: "{{ .Chart.Name }}-service"
+  namespace: {{ .Values.global.namespace }}
+spec:
+  selector:
+    app: {{ .Chart.Name }}
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: {{ .Values.service.portConsole }}
+      name: console
+    - protocol: TCP
+      port: {{ .Values.service.portS3 }}
+      name: s3

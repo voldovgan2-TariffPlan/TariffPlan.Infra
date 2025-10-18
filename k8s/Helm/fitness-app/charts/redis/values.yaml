@@ -1,0 +1,10 @@
+replicaCount: 1
+
+image:
+  repository: redis
+  
+deployment:  
+  containerPort: 6379
+
+service:
+  port: 6379

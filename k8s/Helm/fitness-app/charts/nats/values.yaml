@@ -1,0 +1,10 @@
+replicaCount: 1
+
+image:
+  repository: nats
+  
+deployment:  
+  containerPort: 4222
+
+service:
+  port: 4222

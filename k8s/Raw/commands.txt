@@ -1,0 +1,61 @@
+//------------------------INSTALL----------------------------
+https://medium.com/@javatechie/kubernetes-installation-guide-windows-mac-f65105146127
+
+//------------------------GENERAL----------------------------
+minikube delete
+minikube start --driver=docker
+minikube addons enable ingress
+kubectl get pods -n fitness-app
+kubectl logs -n fitness-app {pod-name}
+kubectl get ingress -n fitness-app
+kubectl delete pod -n fitness-app {pod-name}
+minikube service -n fitness-app {servvice-name}
+kubectl apply -f namespace.yaml
+kubectl apply -f configmap.yaml
+kubectl apply -f secret.yaml
+kubectl create secret docker-registry fitness-docker-hub --docker-server=https://hub.docker.com --docker-username=fitnessappacc --docker-password="z1%EB&2aOf8mO1&N" --docker-email=Volodimir.Dovgan@hotmail.com
+kubectl get secret fitness-docker-hub
+kubectl delete secret fitness-docker-hub
+http://sv-test.ach/main/api/aggregator/GetSettings
+
+//------------------------MONGO----------------------------
+// web ui username: admin
+// web ui password: pass
+kubectl apply -f mongo.yaml
+kubectl apply -f mongo-express.yaml
+
+//-------------------------MINIO---------------------------
+// web ui username: root-user
+// web ui password: root-password
+kubectl apply -f minio.yaml
+
+//-------------------------VAULT---------------------------
+// web ui token: dev-only-token
+// ApiAuthenticationSettings:ClientSecret: domain_client_secret
+// MongoConnection:ConnectionString: mongodb://mongodb-service:27017
+kubectl apply -f vault.yaml
+
+//-------------------------NATS---------------------------
+kubectl apply -f nats.yaml
+
+//-------------------------REDIS---------------------------
+kubectl apply -f redis.yaml
+
+//-------------------------SETTINGS-API---------------------------
+kubectl apply -f settings-api.yaml
+
+//-------------------------IDENTITY-API---------------------------
+kubectl apply -f identity-api.yaml
+
+//-------------------------GATEWAY-API---------------------------
+kubectl apply -f gateway-api.yaml
+
+//-------------------------INGRESS---------------------------
+kubectl apply -f ingress.yaml
+
+docker run --cap-add=IPC_LOCK --name vault -p 8200:8200 -e 'VAULT_DEV_ROOT_TOKEN_ID=dev-only-token' -e 'VAULT_DEV_LISTEN_ADDRESS=0.0.0.0:8200' hashicorp/vault
+
+docker run --name mongo-db -p 27017:27017 -d mongo
+
+git tag 7.0.0
+git push origin 7.0.0

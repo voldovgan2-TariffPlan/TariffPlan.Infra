@@ -1,0 +1,7 @@
+replicaCount: 1
+
+image:
+  repository: fitnessappacc/fitness-app-settings-api:latest
+
+service:
+  port: 8000

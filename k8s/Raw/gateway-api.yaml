@@ -1,0 +1,62 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: gateway-api-deployment
+  namespace: fitness-app
+  labels:
+    app: gateway-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gateway-api
+  template:
+    metadata:
+      labels:
+        app: gateway-api
+    spec:      
+      containers:
+      - name: gateway-api
+        image: fitnessappacc/fitness-app-gateway-api:latest
+        env:
+        - name: Apis__Settings__Url
+          valueFrom: 
+            configMapKeyRef:
+              name: fitness-app-configmap
+              key: GatewayApi_Settings_Api_Url
+        - name: ApiAuthenticationSettings__Address
+          valueFrom: 
+            configMapKeyRef:
+              name: fitness-app-configmap
+              key: GatewayApi_ApiAuthenticationSettings_Address
+        - name: OpenIdConnect__Authority
+          valueFrom: 
+            configMapKeyRef:
+              name: fitness-app-configmap
+              key: GatewayApi_OpenIdConnect_Authority
+        - name: ClientAuthenticationSettings__Issuer
+          valueFrom: 
+            configMapKeyRef:
+              name: fitness-app-configmap
+              key: GatewayApi_ClientAuthenticationSettings_Issuer
+        - name: ServiceBus__Url
+          valueFrom: 
+            configMapKeyRef:
+              name: fitness-app-configmap
+              key: ServiceBus_Url
+        - name: ASPNETCORE_HTTP_PORTS
+          value: '20000'
+      imagePullSecrets:
+      - name: fitness-docker-hub
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-api-service
+  namespace: fitness-app
+spec:
+  selector:
+    app: gateway-api
+  ports:
+    - protocol: TCP
+      port: 20000

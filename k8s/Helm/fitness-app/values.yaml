@@ -1,0 +1,20 @@
+global:
+  namespace: fitness-app
+  configmapName: fitness-app-configmap
+  secretName: fitness-app-secret
+
+  secret:
+    vaultDevRootTokenIdKey: vault-dev-root-token-id
+  
+  configmap:  
+    openIdConnectIssuerKey: OpenIdConnect_Issuer
+    openIdConnectAuthorityKey: OpenIdConnect_Authority
+    
+    gatewayApiSettingsApiUrlKey: GatewayApi_Settings_Api_Url
+    gatewayApiApiAuthenticationSettingsAddressKey: GatewayApi_ApiAuthenticationSettings_Address
+    gatewayApiOpenIdConnectAuthorityKey: GatewayApi_OpenIdConnect_Authority
+    gatewayApiClientAuthenticationSettingsIssuerKey: GatewayApi_ClientAuthenticationSettings_Issuer
+    
+    vaultClientAddressKey: VaultClient_Address
+    
+    serviceBusUrlKey: ServiceBus_Url

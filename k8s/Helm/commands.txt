@@ -1,0 +1,20 @@
+//------------------------INSTALL----------------------------
+https://medium.com/@javatechie/kubernetes-installation-guide-windows-mac-f65105146127
+
+minikube delete
+minikube start --driver=docker
+minikube addons enable ingress
+kubectl get pods -n fitness-app
+kubectl logs -n fitness-app {pod-name}
+kubectl get ingress -n fitness-app
+kubectl delete pod -n fitness-app {pod-name}
+minikube service -n fitness-app {servvice-name}
+kubectl create secret docker-registry fitness-docker-hub --docker-server=https://hub.docker.com --docker-username=fitnessappacc --docker-password="z1%EB&2aOf8mO1&N" --docker-email=Volodimir.Dovgan@hotmail.com
+kubectl get secret fitness-docker-hub
+kubectl delete secret fitness-docker-hub
+http://sv-test.ach/main/api/aggregator/GetSettings
+
+helm install fitness-app ./fitness-app -n fitness-app --create-namespace
+helm upgrade fitness-app ./fitness-app -n fitness-app
+helm uninstall fitness-app -n fitness-app
+helm status mongodb -n fitness-app

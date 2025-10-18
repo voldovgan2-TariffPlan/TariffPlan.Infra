@@ -1,0 +1,11 @@
+replicaCount: 1
+
+image:
+  repository: hashicorp/vault
+
+service:
+  type: LoadBalancer
+  port: 8200
+  protocol: TCP
+  targetPort: 8200
+  nodePort: 30000
