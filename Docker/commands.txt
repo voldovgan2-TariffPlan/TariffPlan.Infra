@@ -1,0 +1,2 @@
+cd C:\Users\admin\source\TariffPlan\Git\TariffPlan.Infra\Docker && docker-compose build --build-arg NUGET_PAT="NUGET_PAT VALUE" 
+cd C:\Users\admin\source\TariffPlan\Git\TariffPlan.Infra\Docker && docker-compose --env-file .local.env up -d

@@ -1,0 +1,76 @@
+services:
+  postgres:
+    image: postgres
+    deploy:
+      replicas: 1
+    restart: always
+    ports:
+      - "6432:6432"
+    command: ["postgres", "-c", "port=6432"]
+    volumes:
+      - ./initDb/postgres:/docker-entrypoint-initdb.d/
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+      POSTGRES_PORT: "${POSTGRES_PORT}"
+    healthcheck:
+      test: ["CMD", "pg_isready", "-q", "-d", "${POSTGRES_DB}", "-U", "${POSTGRES_USER}"]
+      interval: 5s
+      timeout: 60s
+      retries: 5
+      start_period: 80s
+      
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    deploy:
+      replicas: 1
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "80:80"
+    depends_on:
+      - postgres
+
+  nats:
+    image: nats
+    restart: always
+    ports:
+      - "5222:5222"
+    command: ["-js", "-p", "5222"]
+      
+  eventstore.db:
+    image: eventstore/eventstore:24.2.0-jammy
+    environment:
+      - EVENTSTORE_CLUSTER_SIZE=1
+      - EVENTSTORE_RUN_PROJECTIONS=All
+      - EVENTSTORE_START_STANDARD_PROJECTIONS=true
+      - EVENTSTORE_HTTP_PORT=2113
+      - EVENTSTORE_INSECURE=true
+      - EVENTSTORE_ENABLE_ATOM_PUB_OVER_HTTP=true
+    ports:
+      - "2113:2113"
+    volumes:
+      - type: volume
+        source: eventstore-volume-data
+        target: /var/lib/eventstore
+      - type: volume
+        source: eventstore-volume-logs
+        target: /var/log/eventstore
+      
+  mongo:
+    image: mongo
+    ports:
+      - 27017:27017
+    volumes:
+      - ./initDb/mongo:/docker-entrypoint-initdb.d/
+      
+  mongo-express:
+    image: mongo-express
+    ports:
+      - '8081:8081'
+
+volumes:
+  eventstore-volume-data:
+  eventstore-volume-logs:
