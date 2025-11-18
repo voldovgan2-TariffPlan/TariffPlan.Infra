@@ -1,0 +1,45 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: tariff-plan-api-deployment
+  namespace: tariff-plan-app
+  labels:
+    app: tariff-plan-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tariff-plan-api
+  template:
+    metadata:
+      labels:
+        app: tariff-plan-api
+    spec:      
+      containers:
+      - name: tariff-plan-api
+        image: fitnessappacc/tariff-plan-tariff-api
+        env:
+        - name: ConnectionStrings__Postgres
+          valueFrom: 
+            secretKeyRef:
+              name: tariff-plan-secret
+              key: PostgresConnectionString  
+        - name: ASPNETCORE_HTTP_PORTS
+          value: '8080'
+      imagePullSecrets:
+      - name: fitness-docker-hub
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: tariff-plan-api-service
+  namespace: tariff-plan-app
+spec:
+  selector:
+    app: tariff-plan-api
+  type: LoadBalancer
+  ports:
+    - name: backend
+      protocol: TCP
+      port: 8080
+      nodePort: 30000

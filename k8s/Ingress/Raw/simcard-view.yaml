@@ -1,0 +1,45 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: simcard-view-deployment
+  namespace: tariff-plan-app
+  labels:
+    app: simcard-view
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simcard-view
+  template:
+    metadata:
+      labels:
+        app: simcard-view
+    spec:      
+      containers:
+      - name: simcard-view
+        image: fitnessappacc/tariff-plan-simcard-view
+        env:
+        - name: MongoConnection__ConnectionString
+          valueFrom: 
+            secretKeyRef:
+              name: tariff-plan-secret
+              key: MongoConnectionString  
+        - name: ASPNETCORE_HTTP_PORTS
+          value: '8080'
+      imagePullSecrets:
+      - name: fitness-docker-hub
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simcard-view-service
+  namespace: tariff-plan-app
+spec:
+  selector:
+    app: simcard-view
+  type: LoadBalancer
+  ports:
+    - name: backend
+      protocol: TCP
+      port: 8080
+      nodePort: 30001

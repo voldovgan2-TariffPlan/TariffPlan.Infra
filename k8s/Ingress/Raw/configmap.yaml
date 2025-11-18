@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: tariff-plan-configmap
+  namespace: tariff-plan-app
+data:
+  PostgresDb: postgres
+  NatsUrl: nats://nats-service:4222
+  MongoUrl: mongodb-service
+  MongoConnectionDatabaseName: SimCard

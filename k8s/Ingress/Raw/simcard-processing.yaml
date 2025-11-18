@@ -1,0 +1,43 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: simcard-processing-deployment
+  namespace: tariff-plan-app
+  labels:
+    app: simcard-processing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simcard-processing
+  template:
+    metadata:
+      labels:
+        app: simcard-processing
+    spec:      
+      containers:
+      - name: simcard-processing
+        image: fitnessappacc/tariff-plan-simcard-processing
+        env:
+        - name: ConnectionStrings__EventStoreDb
+          valueFrom: 
+            secretKeyRef:
+              name: tariff-plan-secret
+              key: EventStoreDbConnectionString
+        - name: ConnectionStrings__Postgres
+          valueFrom: 
+            secretKeyRef:
+              name: tariff-plan-secret
+              key: PostgresConnectionString
+        - name: MongoConnection__ConnectionString
+          valueFrom: 
+            secretKeyRef:
+              name: tariff-plan-secret
+              key: MongoConnectionString 
+        - name: Nats__Url
+          valueFrom:
+            configMapKeyRef:
+              name: tariff-plan-configmap
+              key: NatsUrl
+      imagePullSecrets:
+      - name: fitness-docker-hub

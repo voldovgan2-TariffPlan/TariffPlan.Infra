@@ -1,0 +1,56 @@
+//------------------------GENERAL----------------------------
+minikube delete
+minikube start --driver=docker
+kubectl get namespace
+kubectl get namespace tariff-plan-app
+kubectl delete namespace tariff-plan-app
+kubectl get pods -n tariff-plan-app
+kubectl describe pod -n tariff-plan-app {pod-name}
+kubectl logs -n tariff-plan-app {pod-name}
+kubectl exec -it -n tariff-plan-app {pod-name} -- printenv
+kubectl get ingress -n tariff-plan-app/Users/volodymyr/Projects/Personal/TariffPlan/Infra/K8s/Ingress/RawNew/namespace.yaml
+kubectl delete pod -n tariff-plan-app {pod-name}
+kubectl get service -n tariff-plan-app
+minikube service -n tariff-plan-app {servvice-name}
+kubectl get secret fitness-docker-hub -n tariff-plan-app
+kubectl delete secret fitness-docker-hub -n tariff-plan-app
+http://sv-test.ach/main/api/aggregator/GetSettings
+//------------------------PREPARATION-----------------------------------
+minikube addons enable ingress
+kubectl apply -f namespace.yaml
+kubectl apply -f configmap.yaml
+kubectl apply -f secret.yaml
+kubectl create secret docker-registry fitness-docker-hub -n tariff-plan-app --docker-server=https://hub.docker.com --docker-username=fitnessappacc --docker-password="z1%EB&2aOf8mO1&N" --docker-email=Volodimir.Dovgan@hotmail.com
+//------------------------POSTGRES----------------------------
+// web ui user email: admin@admin.com
+// web ui password: admin
+// server user name: postgres
+// server password: postgrespassword
+// server database: postgres
+kubectl create configmap postgres-init-sql -n tariff-plan-app --from-file=initDb/postgres
+kubectl apply -f postgres.yaml
+kubectl apply -f pg-admin.yaml
+//------------------------MONGO----------------------------
+// web ui username: admin
+// web ui password: pass
+kubectl create configmap mongo-init-sql -n tariff-plan-app --from-file=initDb/mongo
+kubectl apply -f mongo.yaml
+kubectl apply -f mongo-express.yaml
+//-------------------------NATS---------------------------
+kubectl apply -f nats.yaml
+//-------------------------EVENTSTORE---------------------------
+kubectl apply -f eventstore.yaml
+//-------------------------TARIFF-API---------------------------
+kubectl apply -f tariff-api.yaml
+//-------------------------TARIFF-PROCESSING---------------------------
+kubectl apply -f tariff-processing.yaml
+//-------------------------SIMCARD-VIEW-API---------------------------
+kubectl apply -f simcard-view.yaml
+//-------------------------SIMCARD-API---------------------------
+kubectl apply -f simcard-api.yaml
+//-------------------------SIMCARD-EVENT-STORE-TO-SERVICE-BUS-SYNCHRONIZATION---------------------------
+kubectl apply -f simcard-event-store-to-service-bus-synchronization.yaml
+//-------------------------SIMCARD-PROCESSING---------------------------
+kubectl apply -f simcard-processing.yaml
+//-------------------------INGRESS---------------------------
+kubectl apply -f ingress.yaml

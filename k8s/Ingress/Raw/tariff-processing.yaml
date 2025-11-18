@@ -1,0 +1,33 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: tariff-plan-processing-deployment
+  namespace: tariff-plan-app
+  labels:
+    app: tariff-plan-processing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tariff-plan-processing
+  template:
+    metadata:
+      labels:
+        app: tariff-plan-processing
+    spec:      
+      containers:
+      - name: tariff-plan-processing
+        image: fitnessappacc/tariff-plan-tariff-processing
+        env:
+        - name: ConnectionStrings__Postgres
+          valueFrom: 
+            secretKeyRef:
+              name: tariff-plan-secret
+              key: PostgresConnectionString
+        - name: Nats__Url
+          valueFrom:
+            configMapKeyRef:
+              name: tariff-plan-configmap
+              key: NatsUrl
+      imagePullSecrets:
+      - name: fitness-docker-hub

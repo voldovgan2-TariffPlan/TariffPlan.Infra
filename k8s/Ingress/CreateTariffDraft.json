@@ -1,0 +1,28 @@
+{
+  "name": "Simple",
+  "perMinuteCost": 0.25,
+  "smsCost": 0.1,
+  "connectionFee": 0.15,
+  "perSecondBilling": 10,
+  "externalIncomingCallPerSecondReward": 0.2,
+  "bonusForRecharge": {
+    "amount": 100,
+    "value": 10,
+    "expiresIn": 30
+  },
+  "serviceBundle": {
+    "recurring": {
+      "price": 300,
+      "callMinutesAmount": 500,
+      "smsAmount": 500,
+      "expiresIn": 28
+    },
+    "daily": {
+      "price":15,
+      "callMinutesAmount": 10,
+      "smsAmount": 10,
+      "expiresIn": 1
+    }
+  },
+  "id": "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+}

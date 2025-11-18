@@ -1,0 +1,38 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: simcard-event-store-to-service-bus-synchronization-deployment
+  namespace: tariff-plan-app
+  labels:
+    app: simcard-event-store-to-service-bus-synchronization
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simcard-event-store-to-service-bus-synchronization
+  template:
+    metadata:
+      labels:
+        app: simcard-event-store-to-service-bus-synchronization
+    spec:      
+      containers:
+      - name: simcard-event-store-to-service-bus-synchronization
+        image: fitnessappacc/tariff-plan-simcard-event-store-to-service-bus-synchronization
+        env:
+        - name: ConnectionStrings__Postgres
+          valueFrom: 
+            secretKeyRef:
+              name: tariff-plan-secret
+              key: PostgresConnectionString
+        - name: ConnectionStrings__EventStoreDb
+          valueFrom: 
+            secretKeyRef:
+              name: tariff-plan-secret
+              key: EventStoreDbConnectionString
+        - name: Nats__Url
+          valueFrom:
+            configMapKeyRef:
+              name: tariff-plan-configmap
+              key: NatsUrl
+      imagePullSecrets:
+      - name: fitness-docker-hub

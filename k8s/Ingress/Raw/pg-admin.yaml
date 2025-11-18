@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pgadmin-deployment
+  namespace: tariff-plan-app
+  labels:
+    app: pgadmin-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pgadmin-app
+  template:
+    metadata:
+      labels:
+        app: pgadmin-app
+    spec:
+      containers:
+        - name: pgadmin-container
+          image: dpage/pgadmin4:latest
+          ports:
+            - containerPort: 80
+          env:
+            # pgAdmin login email
+            - name: PGADMIN_DEFAULT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: tariff-plan-secret
+                  key: PgAdminUser
+            # pgAdmin login password
+            - name: PGADMIN_DEFAULT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tariff-plan-secret
+                  key: PgAdminPassword
+            # For templating servers.json with DB creds
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: tariff-plan-secret
+                  key: PostgresUser
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: tariff-plan-secret
+                  key: PostgresPassword
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: tariff-plan-configmap
+                  key: PostgresDb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pgadmin-service
+  namespace: tariff-plan-app
+spec:
+  selector:
+    app: pgadmin-app
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      nodePort: 32000

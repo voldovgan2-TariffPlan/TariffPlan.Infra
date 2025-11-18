@@ -2,33 +2,40 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongodb-deployment
-  namespace: fitness-app
+  namespace: tariff-plan-app
   labels:
-    app: mongodb
+    app: mongodb-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mongodb
+      app: mongodb-app
   template:
     metadata:
       labels:
-        app: mongodb
+        app: mongodb-app
     spec:
       containers:
       - name: mongodb-container
         image: mongo
         ports:
         - containerPort: 27017
+        volumeMounts:
+          - name: mongo-init-volume
+            mountPath: /docker-entrypoint-initdb.d/
+      volumes:
+        - name: mongo-init-volume
+          configMap:
+            name: mongo-init-sql
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: mongodb-service
-  namespace: fitness-app
+  namespace: tariff-plan-app
 spec:
   selector:
-    app: mongodb
+    app: mongodb-app
   ports:
     - protocol: TCP
       port: 27017

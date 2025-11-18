@@ -1,0 +1,50 @@
+apiVersion: apps/v1 
+kind: Deployment
+metadata:
+  name: simcard-api-deployment
+  namespace: tariff-plan-app
+  labels:
+    app: simcard-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simcard-api
+  template:
+    metadata:
+      labels:
+        app: simcard-api
+    spec:      
+      containers:
+      - name: simcard-api
+        image: fitnessappacc/tariff-plan-simcard-api
+        env:
+        - name: ConnectionStrings__EventStoreDb
+          valueFrom: 
+            secretKeyRef:
+              name: tariff-plan-secret
+              key: EventStoreDbConnectionString  
+        - name: ConnectionStrings__Postgres
+          valueFrom: 
+            secretKeyRef:
+              name: tariff-plan-secret
+              key: PostgresConnectionString 
+        - name: ASPNETCORE_HTTP_PORTS
+          value: '8080'
+      imagePullSecrets:
+      - name: fitness-docker-hub
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simcard-api-service
+  namespace: tariff-plan-app
+spec:
+  selector:
+    app: simcard-api
+  type: LoadBalancer
+  ports:
+    - name: backend
+      protocol: TCP
+      port: 8080
+      nodePort: 30002

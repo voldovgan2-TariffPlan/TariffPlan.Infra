@@ -2,18 +2,18 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mongo-express-deployment
-  namespace: fitness-app
+  namespace: tariff-plan-app
   labels:
-    app: mongo-express
+    app: mongo-express-app
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: mongo-express
+      app: mongo-express-app
   template:
     metadata:
       labels:
-        app: mongo-express
+        app: mongo-express-app
     spec:
       containers:
       - name: mongo-express-container
@@ -21,33 +21,23 @@ spec:
         ports:
         - containerPort: 8081
         env:
-        - name: ME_CONFIG_MONGODB_ADMINUSERNAME
-          valueFrom:
-            secretKeyRef:
-              name: fitness-app-secret
-              key: mongo-root-username
-        - name: ME_CONFIG_MONGODB_ADMINPASSWORD
-          valueFrom: 
-            secretKeyRef:
-              name: fitness-app-secret
-              key: mongo-root-password
         - name: ME_CONFIG_MONGODB_SERVER
           valueFrom: 
             configMapKeyRef:
-              name: fitness-app-configmap
-              key: Database_Url
+              name: tariff-plan-configmap
+              key: MongoUrl
 ---
 apiVersion: v1
 kind: Service
 metadata:
   name: mongo-express-service
-  namespace: fitness-app
+  namespace: tariff-plan-app
 spec:
   selector:
-    app: mongo-express
+    app: mongo-express-app
   type: LoadBalancer  
   ports:
     - protocol: TCP
       port: 8081
       targetPort: 8081
-      nodePort: 32000
+      nodePort: 32001

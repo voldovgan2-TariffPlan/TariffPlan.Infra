@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres-deployment
+  namespace: tariff-plan-app
+  labels:
+    app: postgres-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres-app
+  template:
+    metadata:
+      labels:
+        app: postgres-app
+    spec:
+      containers:
+      - name: postgres-container
+        image: postgres:latest
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRES_USER
+          valueFrom:
+            secretKeyRef:
+              name: tariff-plan-secret
+              key: PostgresUser
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: tariff-plan-secret
+              key: PostgresPassword
+        - name: POSTGRES_DB
+          valueFrom:
+            configMapKeyRef:
+              name: tariff-plan-configmap
+              key: PostgresDb
+        volumeMounts:
+          - name: postgres-init-volume
+            mountPath: /docker-entrypoint-initdb.d/
+      volumes:
+        - name: postgres-init-volume
+          configMap:
+            name: postgres-init-sql
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  namespace: tariff-plan-app
+spec:
+  selector:
+    app: postgres-app
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432
