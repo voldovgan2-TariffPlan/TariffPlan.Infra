@@ -37,9 +37,7 @@ metadata:
 spec:
   selector:
     app: simcard-view
-  type: LoadBalancer
   ports:
     - name: backend
       protocol: TCP
       port: 8080
-      nodePort: 30001

@@ -42,4 +42,4 @@ spec:
     - name: backend
       protocol: TCP
       port: 8080
-      nodePort: 30000
+      targetPort: 8080

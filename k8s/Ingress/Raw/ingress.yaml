@@ -5,17 +5,30 @@ metadata:
   namespace: tariff-plan-app
   annotations:
     nginx.ingress.kubernetes.io/use-regex: "true"
-    nginx.ingress.kubernetes.io/rewrite-target: /$1
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
 spec:
   rules:
-  - host: sv-test.ach
+  - host: nowlege.com
     http:
       paths:
-        - path: /main/(.*)
-          pathType: Prefix  
+        - path: /tariff-api(/|$)(.*)
+          pathType: ImplementationSpecific
           backend:
             service:
-              name: gateway-api-service
+              name: tariff-plan-api-service
               port:
-                number: 20000
-
+                number: 8080
+        - path: /simcard-view(/|$)(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: simcard-view-service
+              port:
+                number: 8080
+        - path: /simcard-api(/|$)(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: simcard-api-service
+              port:
+                number: 8080
