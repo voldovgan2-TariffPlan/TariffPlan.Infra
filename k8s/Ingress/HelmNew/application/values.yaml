@@ -1,0 +1,10 @@
+global:
+  namespace: tariff-plan-app
+  configmapName: application-configmap
+  secretName: application-secret
+  
+  configmap:  
+    eventStoreDbConnectionStringKey: EventStoreDbConnectionString
+    postgresConnectionStringKey: PostgresConnectionString
+    mongoConnectionStringKey: MongoConnectionString
+    natsUrlKey: NatsUrl

@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Chart.Name }}-deployment"
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      containers:
+      - name: "{{ .Chart.Name }}-container"
+        image: {{ .Values.image.repository }}
+        env:  
+        - name: ConnectionStrings__Postgres
+          valueFrom: 
+            secretKeyRef:
+              name: {{ .Values.global.secretName }}
+              key: {{ .Values.global.configmap.postgresConnectionStringKey }}
+        - name: ASPNETCORE_HTTP_PORTS
+          value: "{{ .Values.service.port }}"     
+      imagePullSecrets:
+      - name: fitness-docker-hub

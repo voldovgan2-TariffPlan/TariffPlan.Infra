@@ -1,0 +1,31 @@
+apiVersion: v2
+name: tariff-plan-application
+description: A Helm chart for tariff-plan-app
+type: application
+version: 1.0.0
+appVersion: "1.0.0"
+dependencies:
+  - name: simcard-api
+    version: "1.0.0"
+    repository: "file://./charts/simcard-api"
+    enabled: true
+  - name: simcard-event-store-to-service-bus-synchronization
+    version: "1.0.0"
+    repository: "file://./charts/simcard-event-store-to-service-bus-synchronization"
+    enabled: true
+  - name: simcard-processing
+    version: "1.0.0"
+    repository: "file://./charts/simcard-processing"
+    enabled: true
+  - name: simcard-view
+    version: "1.0.0"
+    repository: "file://./charts/simcard-view"
+    enabled: true
+  - name: tariff-plan-api
+    version: "1.0.0"
+    repository: "file://./charts/tariff-plan-api"
+    enabled: true
+  - name: tariff-processing
+    version: "1.0.0"
+    repository: "file://./charts/tariff-processing"
+    enabled: true

@@ -1,0 +1,7 @@
+replicaCount: 1
+
+image:
+  repository: fitnessappacc/tariff-plan-simcard-api
+
+service:
+  port: 8080

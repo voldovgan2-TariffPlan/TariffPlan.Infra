@@ -1,0 +1,4 @@
+replicaCount: 1
+
+image:
+  repository: fitnessappacc/tariff-plan-tariff-processing

@@ -1,0 +1,6 @@
+apiVersion: v2
+name: simcard-event-store-to-service-bus-synchronization
+description: A Helm chart for event store to service bus synchronization
+type: application
+version: 1.0.0
+appVersion: "1.0.0"

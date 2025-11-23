@@ -1,0 +1,8 @@
+replicaCount: 1
+  
+deployment:  
+  repository: postgres
+  containerPort: 5432
+
+service:
+  port: 5432

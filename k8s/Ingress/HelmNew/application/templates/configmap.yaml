@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: application-configmap
+  namespace: tariff-plan-app
+data:
+  NatsUrl: nats://nats-service:4222
+  MongoConnectionDatabaseName: SimCard

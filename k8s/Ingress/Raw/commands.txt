@@ -15,9 +15,7 @@ kubectl get service -n tariff-plan-app
 minikube service -n tariff-plan-app {servvice-name}
 kubectl get secret fitness-docker-hub -n tariff-plan-app
 kubectl delete secret fitness-docker-hub -n tariff-plan-app
-http://sv-test.ach/main/api/aggregator/GetSettings
 //------------------------PREPARATION-----------------------------------
-minikube tunnel
 kubectl apply -f namespace.yaml
 kubectl apply -f configmap.yaml
 kubectl apply -f secret.yaml

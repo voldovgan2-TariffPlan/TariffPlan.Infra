@@ -1,0 +1,4 @@
+replicaCount: 1
+
+image:
+  repository: fitnessappacc/tariff-plan-simcard-event-store-to-service-bus-synchronization

@@ -1,0 +1,11 @@
+replicaCount: 1
+
+deployment:
+  repository: eventstore/eventstore:23.10.8-alpha-arm64v8
+
+service:
+  type: LoadBalancer
+  port: 2113
+  protocol: TCP
+  targetPort: 2113
+  nodePort: 32002

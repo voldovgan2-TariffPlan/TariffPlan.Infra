@@ -1,0 +1,34 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tariff-plan-ingress
+  namespace: tariff-plan-app
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  rules:
+  - host: nowlege.com
+    http:
+      paths:
+        - path: /tariff-api(/|$)(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: tariff-plan-api-service
+              port:
+                number: 8080
+        - path: /simcard-view(/|$)(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: simcard-view-service
+              port:
+                number: 8080
+        - path: /simcard-api(/|$)(.*)
+          pathType: ImplementationSpecific
+          backend:
+            service:
+              name: simcard-api-service
+              port:
+                number: 8080

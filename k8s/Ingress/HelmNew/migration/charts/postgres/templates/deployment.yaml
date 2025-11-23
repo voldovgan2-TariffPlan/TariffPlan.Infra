@@ -1,0 +1,83 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Chart.Name }}-deployment"
+  namespace: {{ .Values.global.namespace }}
+  labels:
+    app: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      initContainers:
+        - name: "{{ .Chart.Name }}-init"
+          image: postgres:17-alpine
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: infra-secret
+                  key: PostgresUser
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: infra-secret
+                  key: PostgresPassword
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: infra-configmap
+                  key: PostgresDb
+          command: [
+            'sh',
+            '-c', 
+            'sleep 10000;',
+            echo "PostgreSQL is ready. Running init scripts...",
+            for f in /init/*.sql; do
+              echo "Executing $f"
+              PGPASSWORD="$POSTGRES_PASSWORD" \
+                psql -h "{{ .Chart.Name }}-service" \
+                    -U "$POSTGRES_USER" \
+                    -d "$POSTGRES_DB" \
+                    -f "$f"
+            done,
+            echo "Ready"]
+          volumeMounts:
+            - name: init-scripts
+              mountPath: /init
+
+      containers:
+        - name: "{{ .Chart.Name }}-container"
+          image: {{ .Values.deployment.repository }}
+          ports:
+            - containerPort: {{ .Values.deployment.containerPort }}
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: infra-secret
+                  key: PostgresUser
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: infra-secret
+                  key: PostgresPassword
+            - name: POSTGRES_DB
+              valueFrom:
+                configMapKeyRef:
+                  name: infra-configmap
+                  key: PostgresDb
+          volumeMounts:
+            - name: init-scripts
+              mountPath: /docker-entrypoint-initdb.d
+
+      volumes:
+        - name: init-scripts
+          configMap:
+            name: "{{ .Chart.Name }}-init-scripts"
