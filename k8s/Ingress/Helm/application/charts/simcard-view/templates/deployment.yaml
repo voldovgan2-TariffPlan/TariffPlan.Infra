@@ -23,7 +23,7 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ .Values.global.secretName }}
-              key: {{ .Values.global.configmap.mongoConnectionStringKey }}
+              key: {{ .Values.global.configmapKeys.mongoConnectionStringKey }}
         - name: ASPNETCORE_HTTP_PORTS
           value: "{{ .Values.service.port }}"   
       imagePullSecrets:

@@ -3,7 +3,7 @@ global:
   configmapName: application-configmap
   secretName: application-secret
   
-  configmap:  
+  configmapKeys:  
     eventStoreDbConnectionStringKey: EventStoreDbConnectionString
     postgresConnectionStringKey: PostgresConnectionString
     mongoConnectionStringKey: MongoConnectionString

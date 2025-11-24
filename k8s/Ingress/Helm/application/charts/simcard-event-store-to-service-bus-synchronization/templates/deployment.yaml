@@ -23,16 +23,16 @@ spec:
           valueFrom:
             secretKeyRef:
               name: {{ .Values.global.secretName }}
-              key: {{ .Values.global.configmap.eventStoreDbConnectionStringKey }}  
+              key: {{ .Values.global.configmapKeys.eventStoreDbConnectionStringKey }}  
         - name: ConnectionStrings__Postgres
           valueFrom: 
             secretKeyRef:
               name: {{ .Values.global.secretName }}
-              key: {{ .Values.global.configmap.postgresConnectionStringKey }}
+              key: {{ .Values.global.configmapKeys.postgresConnectionStringKey }}
         - name: Nats__Url
           valueFrom:
             configMapKeyRef:
               name: {{ .Values.global.configmapName }}
-              key: {{ .Values.global.configmap.natsUrlKey }}
+              key: {{ .Values.global.configmapKeys.natsUrlKey }}
       imagePullSecrets:
       - name: fitness-docker-hub

@@ -1,8 +1,0 @@
-replicaCount: 1
-  
-deployment:  
-  repository: mongo
-  containerPort: 27017
-
-service:
-  port: 27017
