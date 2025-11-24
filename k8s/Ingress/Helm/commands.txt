@@ -1,20 +1,61 @@
-//------------------------INSTALL----------------------------
-https://medium.com/@javatechie/kubernetes-installation-guide-windows-mac-f65105146127
-
+//------------------------GENERAL----------------------------
 minikube delete
-minikube start --driver=docker
+minikube start --driver vfkit --cpus=8 --memory=16384 --disk-size=20g
+brew install helm
 minikube addons enable ingress
-kubectl get pods -n fitness-app
-kubectl logs -n fitness-app {pod-name}
-kubectl get ingress -n fitness-app
-kubectl delete pod -n fitness-app {pod-name}
-minikube service -n fitness-app {servvice-name}
-kubectl create secret docker-registry fitness-docker-hub --docker-server=https://hub.docker.com --docker-username=fitnessappacc --docker-password="z1%EB&2aOf8mO1&N" --docker-email=Volodimir.Dovgan@hotmail.com
-kubectl get secret fitness-docker-hub
-kubectl delete secret fitness-docker-hub
-http://sv-test.ach/main/api/aggregator/GetSettings
+kubectl get namespace
+kubectl get namespace tariff-plan-app
+kubectl delete namespace tariff-plan-app
+kubectl get pods -n tariff-plan-app
+kubectl describe pod -n tariff-plan-app {pod-name}
+kubectl logs -n tariff-plan-app {pod-name}
+kubectl logs -n tariff-plan-app {pod-name} -c {init-container-name}
+kubectl exec -it -n tariff-plan-app {pod-name} -- printenv
+kubectl get ingress -n tariff-plan-app
+kubectl delete pod -n tariff-plan-app {pod-name}
+kubectl get service -n tariff-plan-app
+minikube service -n tariff-plan-app {servvice-name}
+kubectl create secret docker-registry fitness-docker-hub -n tariff-plan-app --docker-server=https://hub.docker.com --docker-username=fitnessappacc --docker-password="z1%EB&2aOf8mO1&N" --docker-email=Volodimir.Dovgan@hotmail.com
+kubectl get secret fitness-docker-hub -n tariff-plan-app
+kubectl delete secret fitness-docker-hub -n tariff-plan-app
 
-helm install fitness-app ./fitness-app -n fitness-app --create-namespace
-helm upgrade fitness-app ./fitness-app -n fitness-app
-helm uninstall fitness-app -n fitness-app
-helm status mongodb -n fitness-app
+//------------------------POSTGRES----------------------------
+// web ui user email: admin@admin.com
+// web ui password: admin
+// server user name: postgres
+// server password: postgrespassword
+// server database: postgres
+kubectl create configmap postgres-init-sql -n tariff-plan-app --from-file=initDb/postgres
+kubectl apply -f postgres.yaml
+kubectl apply -f pg-admin.yaml
+//------------------------MONGO----------------------------
+// web ui username: admin
+// web ui password: pass
+kubectl create configmap mongo-init-sql -n tariff-plan-app --from-file=initDb/mongo
+kubectl apply -f mongo.yaml
+kubectl apply -f mongo-express.yaml
+//-------------------------NATS---------------------------
+kubectl apply -f nats.yaml
+//-------------------------EVENTSTORE---------------------------
+kubectl apply -f eventstore.yaml
+//------------------------HELM----------------------------
+helm install infra ./infra -n tariff-plan-app --create-namespace
+helm upgrade infra ./infra -n tariff-plan-app
+helm uninstall infra -n tariff-plan-app
+
+helm install application ./application -n tariff-plan-app --create-namespace
+helm upgrade application ./application -n tariff-plan-app
+helm uninstall application -n tariff-plan-app
+
+helm status mongodb -n tariff-plan-app
+
+//-------------------------INGRESS---------------------------
+kubectl apply -f ingress.yaml
+kubectl get ingress -n tariff-plan-app
+sudo nano /etc/hosts
+127.0.0.1	nowlege.com
+ctrl+o
+enter
+ctrl+x
+//-------------------------TEST---------------------------
+./test.sh

@@ -1,7 +1,0 @@
-replicaCount: 1
-
-image:
-  repository: fitnessappacc/fitness-app-gateway-api:latest
-
-service:
-  port: 20000

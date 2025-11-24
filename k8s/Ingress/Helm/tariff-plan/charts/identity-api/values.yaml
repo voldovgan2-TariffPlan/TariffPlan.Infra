@@ -1,7 +1,0 @@
-replicaCount: 1
-
-image:
-  repository: fitnessappacc/fitness-app-identity-api:latest
-
-service:
-  port: 5000
